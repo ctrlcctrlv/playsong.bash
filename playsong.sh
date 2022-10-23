@@ -17,6 +17,9 @@ if [ ! -z "$HEVC" -a -z "$VCODEC" ]; then
 elif [ -z "$VCODEC" ]; then
     VCODEC="h264_nvenc -qp $OUTQP"
 fi
+if [[ "$VCODEC" =~ v[[:digit:]]* ]]; then
+    VEXTRA=", hwdownload, format=yuv420p"
+fi
 if [ ! -z "$FLAC" ]; then
     ACODEC=copy
 else
@@ -45,7 +48,7 @@ ffmpeg -i "$INPUT" -hwaccel cuda -hwaccel_output_format cuda -i "$COVER" \
     format=yuv420p, hwdownload, pad=$OUTWIDTH : $OUTHEIGHT : 0 : (oh-ih)/2,
     loop=-1:1:1, ${SUBS_ADD} hwupload_cuda [bg];
 
-    [bg][t]overlay_cuda=y=$OVERLAYEQ: shortest=1, hwdownload, format=yuv420p" \
+    [bg][t]overlay_cuda=y=$OVERLAYEQ: shortest=1 $VEXTRA" \
 -frame_rate "$OUTRATE" -c:v $VCODEC -c:a $ACODEC
 EOF
 )

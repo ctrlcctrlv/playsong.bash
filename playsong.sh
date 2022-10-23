@@ -34,7 +34,15 @@ else
     WRAP=0
 fi
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
-ffmpeg -i "$INPUT" -hwaccel cuda -hwaccel_output_format cuda -i "$COVER" -filter_complex "showspectrum=slide=scroll:color=intensity:mode=separate,format=rgba,colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0,setsar=1,hwupload_cuda,scale_npp=$OUTWIDTH:$OUTHEIGHTEQ[t]; [1:v]scale_npp=$OUTWIDTH:$OUTHEIGHT:force_original_aspect_ratio=decrease:format=yuv420p,hwdownload,pad=$OUTWIDTH:$OUTHEIGHT:0:(oh-ih)/2,loop=-1:1:1${SUBS_ADD}hwupload_cuda[bg]; [bg][t]overlay_cuda=y=$OUTHEIGHT-($OUTHEIGHTEQ):shortest=1" -c:v $VCODEC -qp "${OUTQP}" -frame_rate 30 -c:a $ACODEC
+ffmpeg -i "$INPUT" -hwaccel cuda -hwaccel_output_format cuda -i "$COVER" \
+-filter_complex "showspectrum=slide=scroll : color=intensity : mode=separate,
+format=rgba, colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0, setsar=1,
+hwupload_cuda, scale_npp=$OUTWIDTH : $OUTHEIGHTEQ[t]; [1:v]scale_npp=$OUTWIDTH
+: $OUTHEIGHT : force_original_aspect_ratio=decrease : format=yuv420p,
+hwdownload, pad=$OUTWIDTH : $OUTHEIGHT : 0 : (oh-ih)/2,
+loop=-1:1:1${SUBS_ADD}hwupload_cuda[bg];
+[bg][t]overlay_cuda=y=$OUTHEIGHT-($OUTHEIGHTEQ) : shortest=1" -c:v $VCODEC -qp \
+"${OUTQP}" -frame_rate 30 -c:a $ACODEC
 EOF
 )
 PLAYER=$(hash mpv && echo mpv || echo ffplay)

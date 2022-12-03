@@ -2,6 +2,8 @@
 
 Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 
+<a href="https://www.youtube.com/watch?v=DdPv2SEn-rg"><img src="https://i3.ytimg.com/vi/DdPv2SEn-rg/maxresdefault.jpg" width=480></a>
+
 ----
 
 ♪&nbsp;Sing a song of gladness and cheer&nbsp;♪<br>

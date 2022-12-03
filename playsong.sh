@@ -8,7 +8,7 @@ OUTQP="${OUTQP:-23}"
 OUTHEIGHT="${OUTHEIGHT:-1080}"
 OUTWIDTH="${OUTWIDTH:-1920}"
 if [ ! -z "$SUBS" ]; then
-    SUBS_ADD="subtitles=$SUBS,"
+    SUBS_ADD=",subtitles=$SUBS"
 else
     SUBS_ADD=""
 fi
@@ -18,7 +18,7 @@ elif [ -z "$VCODEC" ]; then
     VCODEC="h264_nvenc -qp $OUTQP"
 fi
 if [[ "$VCODEC" =~ v[[:digit:]]* ]]; then
-    VEXTRA=", hwdownload, format=yuv420p"
+    VEXTRA=", format=yuv420p"
 fi
 if [ ! -z "$FLAC" ]; then
     ACODEC=copy
@@ -44,12 +44,12 @@ ffmpeg -i "$INPUT" -hwaccel cuda -hwaccel_output_format cuda -i "$COVER" \
     colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0, setsar=1, hwupload_cuda,
     scale_npp=$OUTWIDTH : $OUTHEIGHTEQ[t];
 
-    [1:v]scale_npp=$OUTWIDTH : $OUTHEIGHT : force_original_aspect_ratio=1 :
-    format=yuv420p, hwdownload, pad=$OUTWIDTH : $OUTHEIGHT : 0 : (oh-ih)/2,
-    loop=-1:1:1, ${SUBS_ADD} hwupload_cuda [bg];
+    [1:v]scale=$OUTWIDTH : $OUTHEIGHT : force_original_aspect_ratio=1 ,
+    format=yuv420p, pad=$OUTWIDTH : $OUTHEIGHT : 0 : (oh-ih)/2,
+    loop=-1:1:1 [bg];
 
-    [bg][t]overlay_cuda=y=$OVERLAYEQ: shortest=1 $VEXTRA" \
--frame_rate "$OUTRATE" -c:v $VCODEC -c:a $ACODEC
+    [bg][t]overlay=y=$OVERLAYEQ: shortest=1 $SUBS_ADD $VEXTRA" \
+-vsync 1 -r "$OUTRATE" -c:v $VCODEC -c:a $ACODEC
 EOF
 )
 PLAYER=$(hash mpv && which mpv || which ffplay)

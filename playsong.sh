@@ -1,6 +1,6 @@
 #!/bin/bash
 INPUT="$1"
-COVER="$(dirname -- "$1")/cover.jpg"
+COVER="${COVER:-$(dirname -- "$1")/cover.jpg}"
 SUBS="$2"
 OUT="$3"
 OUTRATE="${OUTRATE:-30}"

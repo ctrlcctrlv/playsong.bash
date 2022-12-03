@@ -1,13 +1,13 @@
-# playsong.bash
+# playsong.bash v1.0.1 ⏫20221203
 
 Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 
 ----
 
-Sing a song of gladness and cheer<br>
-For the time of Christmas is here<br>
-Look around about you and see<br>
-What a world of wonder this world can be
+♪&nbsp;Sing a song of gladness and cheer&nbsp;♪<br>
+♪&nbsp;For the time of Christmas is here&nbsp;♪<br>
+♪&nbsp;Look around about you and see&nbsp;♪<br>
+♪&nbsp;What a world of wonder this world can be&nbsp;♪
 
 ## Usage
 ```bash

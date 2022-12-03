@@ -38,7 +38,7 @@ else
     WRAP=0
 fi
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
-ffmpeg -i "$INPUT" -hwaccel cuda -hwaccel_output_format cuda -i "$COVER" \
+ffmpeg -i "$INPUT" -r "$OUTRATE" -i "$COVER" \
 -filter_complex \
     "showspectrum=slide=scroll : color=intensity : mode=separate, format=rgba,
     colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0, setsar=1, hwupload_cuda,

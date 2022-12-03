@@ -40,9 +40,9 @@ fi
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
 ffmpeg -i "$INPUT" -r "$OUTRATE" -i "$COVER" \
 -filter_complex \
-    "showspectrum=slide=scroll : color=intensity : mode=separate, format=rgba,
-    colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0, setsar=1, hwupload_cuda,
-    scale_npp=$OUTWIDTH : $OUTHEIGHTEQ[t];
+    "showspectrum=slide=scroll : color=intensity : mode=separate : fps=$OUTRATE,
+    setsar=1, format=rgba, colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0,
+    scale=$OUTWIDTH : $OUTHEIGHTEQ[t];
 
     [1:v]scale=$OUTWIDTH : $OUTHEIGHT : force_original_aspect_ratio=1 ,
     format=yuv420p, pad=$OUTWIDTH : $OUTHEIGHT : 0 : (oh-ih)/2,

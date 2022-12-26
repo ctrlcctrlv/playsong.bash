@@ -1,4 +1,4 @@
-# playsong.bash v1.0.1 ⏫20221203
+# playsong.bash v1.1.0 ⏫20221226
 
 Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 

@@ -43,7 +43,7 @@ if [ -z "$OUT" ]; then
 else
     WRAP=0
 fi
-if [ $MPEGTS -eq 1 -o $MPEGTS -ne 0 -a $MP4 -eq 1 ]; then
+if [ $MPEGTS -eq 1 -o \( $MPEGTS -ne 0 -a $MP4 -eq 1 \) ]; then
     OUTFLAGS="-bsf:v h264_mp4toannexb -movflags +faststart -f mpegts"
 fi
 

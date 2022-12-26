@@ -1,4 +1,7 @@
-# playsong.bash v1.1.1 ⏫20221226
+#!/bin/bash
+source .env
+cat << EOF
+# playsong.bash v$VERSION ⏫$(date +%Y%m%d)
 
 Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 
@@ -10,6 +13,8 @@ Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 ♪&nbsp;For the time of Christmas is here&nbsp;♪<br>
 ♪&nbsp;Look around about you and see&nbsp;♪<br>
 ♪&nbsp;What a world of wonder this world can be&nbsp;♪
+EOF
+cat << 'EOF'
 ## Usage
 ```bash
 playsong [infile] [subsfile] [outfile]
@@ -30,20 +35,10 @@ E.g.:
 
 ## License
 ```
-   Copyright 2022 Fredrick R. Brennan
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-
+EOF
+cat LICENSE | grep -A9999 -m1 -P '^\s+Copyright' LICENSE | sed -e "s/\[yyyy\]/`date +%Y`/;s/\[.*/Fredrick R. Brennan/"
+cat << 'EOF'
 ```
 
 **By contributing you release your contribution under the terms of the license.**
+EOF

@@ -1,5 +1,5 @@
 #!/bin/bash
-INPUT="$1"
+INPUT="${INPUT:-$1}"
 COVER="${COVER:-$(dirname -- "$1")/cover.jpg}"
 SUBS="$2"
 OUT="$3"
@@ -31,19 +31,22 @@ OVERLAYEQ=$(bc <<< "$OUTHEIGHT-$OUTHEIGHTEQ")
 
 export __NV_PRIME_RENDER_OFFLOAD=1
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
+if [[ "$OUT" =~ \.mp4$ ]]; then
+    MP4=1
+else
+    MP4=0
+fi
 if [ -z "$OUT" ]; then
     WRAP=1
     OUTFLAGS='-f matroska'
     OUT='-'
 else
-    if [[ "$OUT" =~ \.mp4$ ]]; then
-        MP4=1
-        OUTFLAGS="-bsf:v h264_mp4toannexb -movflags +faststart -f mpegts"
-    else
-        MP4=0
-    fi
     WRAP=0
 fi
+if [ $MPEGTS -eq 1 -o $MPEGTS -ne 0 -a $MP4 -eq 1 ]; then
+    OUTFLAGS="-bsf:v h264_mp4toannexb -movflags +faststart -f mpegts"
+fi
+
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
 ffmpeg -i "$INPUT" -r "$OUTRATE" -i "$COVER" \
 -filter_complex \

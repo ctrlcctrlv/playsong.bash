@@ -57,7 +57,7 @@ if [ -z "$OUT" ]; then
 else
     WRAP=0
 fi
-if [ $MPEGTS -eq 1 -o \( $MPEGTS -ne 0 -a $MP4 -eq 1 \) ]; then
+if [ $((MPEGTS)) -eq 1 -o \( $((MPEGTS)) -ne 0 -a $((MP4)) -eq 1 \) ]; then
     OUTFLAGS="-bsf:v h264_mp4toannexb -movflags +faststart -f mpegts"
 fi
 
@@ -79,13 +79,13 @@ EOF
 
 PLAYER=$(hash mpv && which mpv || which ffplay)
 
-if [ $WRAP -eq 0 ]; then
+if [ $((WRAP)) -eq 0 ]; then
     FINAL_COMMAND="$(eval echo "$COMMAND") $OUTFLAGS $(printf "%q" "$OUT")"
 else
     FINAL_COMMAND="$PLAYER <(eval "$(printf "%q" "$(eval echo "$COMMAND")")" $OUTFLAGS "$(printf "%q" "$OUT")")"
 fi
 
-if [ $ECHOONLY -eq 1 ]; then
+if [ $((ECHOONLY)) -eq 1 ]; then
     echo "$FINAL_COMMAND"
 else
     eval $FINAL_COMMAND

@@ -48,9 +48,9 @@ if [ $MPEGTS -eq 1 -o $MPEGTS -ne 0 -a $MP4 -eq 1 ]; then
 fi
 
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
-ffmpeg -i "$INPUT" -r "$OUTRATE" -i "$COVER" \
+ffmpeg -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i "$COVER" \
 -filter_complex \
-    "showspectrum=slide=scroll : color=intensity : mode=separate : fps=$OUTRATE,
+    $(printf "%q" "showspectrum=slide=scroll : color=intensity : mode=separate : fps=$OUTRATE,
     setsar=1, format=rgba, colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0,
     scale=$OUTWIDTH : $OUTHEIGHTEQ[t];
 
@@ -58,16 +58,23 @@ ffmpeg -i "$INPUT" -r "$OUTRATE" -i "$COVER" \
     format=yuv420p, pad=$OUTWIDTH : $OUTHEIGHT : 0 : (oh-ih)/2,
     loop=-1:1:1 [bg];
 
-    [bg][t]overlay=y=$OVERLAYEQ: shortest=1 $SUBS_ADD $VEXTRA" \
+    [bg][t]overlay=y=$OVERLAYEQ: shortest=1 $SUBS_ADD $VEXTRA") \
 -vsync 1 -r "$OUTRATE" -c:v $VCODEC -c:a $ACODEC
 EOF
 )
+
 PLAYER=$(hash mpv && which mpv || which ffplay)
-set -x
+
 if [ $WRAP -eq 0 ]; then
-    eval "$COMMAND" $OUTFLAGS "$OUT"
+    FINAL_COMMAND="$(eval echo "$COMMAND") $OUTFLAGS $(printf "%q" "$OUT")"
 else
-    "$PLAYER" <(eval "$COMMAND" $OUTFLAGS "$OUT")
+    FINAL_COMMAND="$PLAYER <(eval "$(printf "%q" "$(eval echo "$COMMAND")")" $OUTFLAGS "$(printf "%q" "$OUT")")"
 fi
-set +x
+
+if [ $ECHOONLY -eq 1 ]; then
+    echo "$FINAL_COMMAND"
+else
+    eval $FINAL_COMMAND
+fi
+
 stty sane

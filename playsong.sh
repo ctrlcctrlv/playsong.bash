@@ -33,8 +33,15 @@ export __NV_PRIME_RENDER_OFFLOAD=1
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
 if [ -z "$OUT" ]; then
     WRAP=1
-    OUT='-f matroska -'
+    OUTFLAGS='-f matroska'
+    OUT='-'
 else
+    if [[ "$OUT" =~ \.mp4$ ]]; then
+        MP4=1
+        OUTFLAGS="-bsf:v h264_mp4toannexb -movflags +faststart -f mpegts"
+    else
+        MP4=0
+    fi
     WRAP=0
 fi
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
@@ -55,9 +62,9 @@ EOF
 PLAYER=$(hash mpv && which mpv || which ffplay)
 set -x
 if [ $WRAP -eq 0 ]; then
-    eval "$COMMAND" "$(printf "%q" "$OUT")"
+    eval "$COMMAND" $OUTFLAGS "$OUT"
 else
-    "$PLAYER" <(eval "$COMMAND" $OUT)
+    "$PLAYER" <(eval "$COMMAND" $OUTFLAGS "$OUT")
 fi
 set +x
 stty sane

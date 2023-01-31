@@ -1,4 +1,4 @@
-# playsong.bash v1.1.2 ⏫20221227
+# playsong.bash v1.2.0 ⏫20230131
 
 Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 
@@ -30,7 +30,7 @@ E.g.:
 
 ## License
 ```
-   Copyright 2022 Fredrick R. Brennan
+   Copyright 2023 Fredrick R. Brennan
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

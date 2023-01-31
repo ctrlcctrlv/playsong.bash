@@ -14,7 +14,7 @@
 #   limitations under the License.
 
 INPUT="${INPUT:-$1}"
-COVER="${COVER:-$(dirname -- "$1")/cover.jpg}"
+COVER="${COVER:-"$(readlink -f "$(dirname -- "$1")/cover.jpg")"}"
 SUBS="$2"
 OUT="$3"
 OUTRATE="${OUTRATE:-30}"
@@ -62,7 +62,7 @@ if [ $((MPEGTS)) -eq 1 -o \( $((MPEGTS)) -ne 0 -a $((MP4)) -eq 1 \) ]; then
 fi
 
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
-ffmpeg -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i "$COVER" \
+ffmpeg -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i $(printf "%q" "$COVER") \
 -filter_complex \
     $(printf "%q" "showspectrum=slide=scroll : color=intensity : mode=separate : fps=$OUTRATE,
     setsar=1, format=rgba, colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0,

@@ -39,7 +39,7 @@ if [ ! -z "$FLAC" ]; then
 else
     ACODEC='aac -b:a 128k'
 fi
-AEXTRA="${AEXTRA:-'-ac 2'}"
+AEXTRA="${AEXTRA:--ac 2}"
 
 OUTHEIGHTEQ=$(bc <<< "($OUTHEIGHT/2)-($OUTHEIGHT/10)")
 OVERLAYEQ=$(bc <<< "$OUTHEIGHT-$OUTHEIGHTEQ")

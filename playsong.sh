@@ -78,7 +78,8 @@ ffmpeg -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i $(printf "%q" "$COVER") \
 EOF
 )
 
-PLAYER=$(hash mpv && which mpv || which ffplay)
+PLAYER=${PLAYER:-$(hash mpv && which mpv || which ffplay)}
+[[ "$PLAYER" =~ ffplay$ ]] && PLAYER="${PLAYER} -autoexit"
 
 if [ $((WRAP)) -eq 0 ]; then
     FINAL_COMMAND="$(eval echo "$COMMAND") $OUTFLAGS $(printf "%q" "$OUT")"

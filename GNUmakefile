@@ -4,7 +4,9 @@ SHELL    := /bin/bash
 MARKDOWN := README.md
 SCRIPTS  := $(foreach M,$(MARKDOWN),templates/$M.sh)
 
-#all: templates/README.md
+all: README.md
 
-$(MARKDOWN) : $(SCRIPTS)
+$(MARKDOWN) : $(SCRIPTS) .version
 	./$< > $@
+
+include mk/bumpversion/bumpversion.mk

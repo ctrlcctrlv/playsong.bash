@@ -1,0 +1,3 @@
+[submodule "mk/bumpversion"]
+	path = mk/bumpversion
+	url = https://github.com/ctrlcctrlv/bumpversion.mk

@@ -39,6 +39,7 @@ if [ ! -z "$FLAC" ]; then
 else
     ACODEC='aac -b:a 128k'
 fi
+AEXTRA="${AEXTRA:-'-ac 2'}"
 
 OUTHEIGHTEQ=$(bc <<< "($OUTHEIGHT/2)-($OUTHEIGHT/10)")
 OVERLAYEQ=$(bc <<< "$OUTHEIGHT-$OUTHEIGHTEQ")
@@ -73,7 +74,7 @@ ffmpeg -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i $(printf "%q" "$COVER") \
     loop=-1:1:1 [bg];
 
     [bg][t]overlay=y=$OVERLAYEQ: shortest=1 $SUBS_ADD $VEXTRA") \
--vsync 1 -r "$OUTRATE" -c:v $VCODEC -c:a $ACODEC
+-vsync 1 -r "$OUTRATE" -c:v $VCODEC -c:a $ACODEC $AEXTRA
 EOF
 )
 

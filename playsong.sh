@@ -13,6 +13,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+FFSPECCOLOR="${FFSPECCOLOR:-intensity}"
 INPUT="${INPUT:-$1}"
 COVER="${COVER:-"$(readlink -f "$(dirname -- "$1")/cover.jpg")"}"
 SUBS="$2"
@@ -65,16 +66,16 @@ fi
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
 ffmpeg -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i $(printf "%q" "$COVER") \
 -filter_complex \
-    $(printf "%q" "showspectrum=slide=scroll : color=intensity : mode=separate : fps=$OUTRATE,
-    setsar=1, format=rgba, colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0,
-    scale=$OUTWIDTH : $OUTHEIGHTEQ[t];
+    $(printf "%q" "showspectrum=slide=scroll : color=$FFSPECCOLOR : mode=separate : s=${OUTWIDTH}x${OUTHEIGHTEQ},
+    format=rgba, colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0,
+    setsar[t];
 
     [1:v]scale=$OUTWIDTH : $OUTHEIGHT : force_original_aspect_ratio=1 ,
     format=yuv420p, pad=$OUTWIDTH : $OUTHEIGHT : 0 : (oh-ih)/2,
     loop=-1:1:1 [bg];
 
     [bg][t]overlay=y=$OVERLAYEQ: shortest=1 $SUBS_ADD $VEXTRA") \
--vsync 1 -r "$OUTRATE" -c:v $VCODEC -c:a $ACODEC $AEXTRA
+    -r "$(($OUTRATE))" -c:v $VCODEC -c:a $ACODEC $AEXTRA
 EOF
 )
 

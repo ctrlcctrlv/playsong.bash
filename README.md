@@ -21,12 +21,12 @@ E.g.:
 ```
 
 ## Requires
-* NVIDIA card (for realtime playback)
 * Bash
 * ffmpeg (a very [bloated](https://github.com/ctrlcctrlv/bloated-ffmpeg-compile-command) one at least compiled against CUDA and all standard AVFilters)
 
 ### Optional deps
 * mpv
+* NVIDIA or VAAPI compatible hardware
 
 ## License
 ```

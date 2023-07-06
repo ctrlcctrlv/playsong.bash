@@ -22,18 +22,25 @@ OUTRATE="${OUTRATE:-30}"
 OUTQP="${OUTQP:-23}"
 OUTHEIGHT="${OUTHEIGHT:-1080}"
 OUTWIDTH="${OUTWIDTH:-1920}"
+which nvidia-smi && ( export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+VCODECEXTRA=_nvenc)
+[[ -d /opt/intel/oneapi ]] && VCODECEXTRA=_vaapi
 if [ ! -z "$SUBS" ]; then
     SUBS_ADD=",subtitles=$SUBS"
 else
     SUBS_ADD=""
 fi
 if [ ! -z "$HEVC" -a -z "$VCODEC" ]; then
-    VCODEC="hevc_nvenc -qp $OUTQP"
+    VCODEC="hevc$VCODECEXTRA -qp $OUTQP"
 elif [ -z "$VCODEC" ]; then
-    VCODEC="h264_nvenc -qp $OUTQP"
+    VCODEC="h264$VCODECEXTRA -qp $OUTQP"
 fi
 if [[ "$VCODEC" =~ v[[:digit:]]* ]]; then
     VEXTRA=", format=yuv420p"
+fi
+if [[ "$VCODECEXTRA" = "_vaapi" ]]; then
+    VEXTRA="$VEXTRA, format=nv12,hwupload"
 fi
 if [ ! -z "$FLAC" ]; then
     ACODEC=copy
@@ -45,8 +52,8 @@ AEXTRA="${AEXTRA:--ac 2}"
 OUTHEIGHTEQ=$(bc <<< "($OUTHEIGHT/2)-($OUTHEIGHT/10)")
 OVERLAYEQ=$(bc <<< "$OUTHEIGHT-$OUTHEIGHTEQ")
 
-export __NV_PRIME_RENDER_OFFLOAD=1
-export __GLX_VENDOR_LIBRARY_NAME=nvidia
+[[ -d /opt/intel/oneapi ]] && \
+    BEFOREARGS="-hwaccel vaapi -init_hw_device vaapi -hwaccel_output_format vaapi"
 if [[ "$OUT" =~ \.mp4$ ]]; then
     MP4=1
 else
@@ -64,7 +71,7 @@ if [ $((MPEGTS)) -eq 1 -o \( $((MPEGTS)) -ne 0 -a $((MP4)) -eq 1 \) ]; then
 fi
 
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
-ffmpeg -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i $(printf "%q" "$COVER") \
+ffmpeg $BEFOREARGS -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i $(printf "%q" "$COVER") \
 -filter_complex \
     $(printf "%q" "showspectrum=slide=scroll : color=$FFSPECCOLOR : mode=separate : s=${OUTWIDTH}x${OUTHEIGHTEQ},
     format=rgba, colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0,

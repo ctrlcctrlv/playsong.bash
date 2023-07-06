@@ -22,6 +22,7 @@ OUTRATE="${OUTRATE:-60}"
 OUTQP="${OUTQP:-23}"
 OUTHEIGHT="${OUTHEIGHT:-1080}"
 OUTWIDTH="${OUTWIDTH:-1920}"
+MPVARGS="${MPVARGS:--hwdec=auto}"
 which nvidia-smi && ( export __NV_PRIME_RENDER_OFFLOAD=1
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
 VCODECEXTRA=_nvenc)
@@ -86,7 +87,7 @@ ffmpeg $BEFOREARGS -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i $(printf "%q" "$C
 EOF
 )
 
-PLAYER=${PLAYER:-$(hash mpv && which mpv || which ffplay)}
+PLAYER=${PLAYER:-$(hash mpv && echo "$(which mpv)" ${MPVARGS} || which ffplay)}
 [[ "$PLAYER" =~ ffplay$ ]] && PLAYER="${PLAYER} -autoexit"
 
 if [ $((WRAP)) -eq 0 ]; then

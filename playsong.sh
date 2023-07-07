@@ -15,7 +15,19 @@
 
 FFSPECCOLOR="${FFSPECCOLOR:-intensity}"
 INPUT="${INPUT:-$1}"
+_COVERGIVEN="$COVER"
 COVER="${COVER:-"$(readlink -f "$(dirname -- "$1")/cover.jpg")"}"
+_cover_extensions=(jpg png webp jxl avif bmp)
+for ext in _cover_extensions; do
+	for possible_cover in cover folder; do
+        [ ! -f "$COVER" -a -z "$_COVERGIVEN" ] && (
+            COVER="$(readlink -f "$(dirname -- "$1")/$possible_cover.$ext")"
+        )
+        [ -f "$COVER" ] && (breakout=1 && break)
+    done
+    [ -z "$breakout" ] && break
+done
+[ ! -f "$COVER" ] && COVER=/usr/share/playsong/logo.webp
 SUBS="$2"
 OUT="$3"
 OUTRATE="${OUTRATE:-60}"
@@ -74,7 +86,7 @@ fi
 mapfile -d '' COMMAND < <(head -c -1 << 'EOF'
 ffmpeg $BEFOREARGS -i $(printf "%q" "$INPUT") -r "$OUTRATE" -i $(printf "%q" "$COVER") \
 -filter_complex \
-    $(printf "%q" "showspectrum=slide=scroll : color=$FFSPECCOLOR : mode=separate : s=${OUTWIDTH}x${OUTHEIGHTEQ},
+    $(printf "%q" "showspectrum=slide=scroll : fps=$OUTRATE : color=$FFSPECCOLOR : mode=separate : s=${OUTWIDTH}x${OUTHEIGHTEQ},
     format=rgba, colorchannelmixer=1:0:0:0:0:1:0:0:0:0:1:0:1:1:1:0,
     setsar[t];
 
@@ -103,3 +115,5 @@ else
 fi
 
 stty sane
+
+# vim: ts=4 sw=4 et

@@ -26,17 +26,17 @@ E.g.:
 ```
 
 ## Requires
-* NVIDIA card (for realtime playback)
 * Bash
-* ffmpeg (a very [bloated](https://github.com/ctrlcctrlv/bloated-ffmpeg-compile-command) one at least compiled against CUDA and all standard AVFilters)
+* ffmpeg (a very [bloated](https://github.com/ctrlcctrlv/bloated-ffmpeg-compile-command) one preferred)
 
 ### Optional deps
 * mpv
+* NVIDIA® card or Intel® Xe™ graphics (for realtime playback @ 60fps)
 
 ## License
 ```
 EOF
-cat LICENSE | grep -A9999 -m1 -P '^\s+Copyright' LICENSE | sed -e "s/\[yyyy\]/`date +%Y`/;s/\[.*/Fredrick R. Brennan/"
+cat LICENSE | grep -A9999 -m1 -P '^\s+Copyright' LICENSE | sed -e "s/\[yyyy\]/2022–`date +%Y`/;s/\[.*/Fredrick R. Brennan/"
 cat << 'EOF'
 ```
 

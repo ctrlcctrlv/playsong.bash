@@ -1,4 +1,4 @@
-# playsong.bash v1.2.1 ⏫20230131
+# playsong.bash v2.0.0 ⏫20230706
 
 Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 
@@ -22,11 +22,11 @@ E.g.:
 
 ## Requires
 * Bash
-* ffmpeg (a very [bloated](https://github.com/ctrlcctrlv/bloated-ffmpeg-compile-command) one at least compiled against CUDA and all standard AVFilters)
+* ffmpeg (a very [bloated](https://github.com/ctrlcctrlv/bloated-ffmpeg-compile-command) one preferred)
 
 ### Optional deps
 * mpv
-* NVIDIA or VAAPI compatible hardware
+* NVIDIA® card or Intel® Xe™ graphics (for realtime playback @ 60fps)
 
 ## License
 ```

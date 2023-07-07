@@ -10,6 +10,15 @@ Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 ♪&nbsp;For the time of Christmas is here&nbsp;♪<br>
 ♪&nbsp;Look around about you and see&nbsp;♪<br>
 ♪&nbsp;What a world of wonder this world can be&nbsp;♪
+## Installation
+
+```bash
+git clone https://github.com/ctrlcctrlv/playsong.bash
+cd playsong.bash
+sudo cp -v playsong.sh /usr/local/bin/playsong
+sudo install -Dm0777 -v share/logo.webp /usr/share/playsong/logo.webp
+```
+
 ## Usage
 ```bash
 playsong [infile] [subsfile] [outfile]

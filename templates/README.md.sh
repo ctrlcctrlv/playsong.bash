@@ -15,6 +15,15 @@ Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
 ♪&nbsp;What a world of wonder this world can be&nbsp;♪
 EOF
 cat << 'EOF'
+## Installation
+
+```bash
+git clone https://github.com/ctrlcctrlv/playsong.bash
+cd playsong.bash
+sudo cp -v playsong.sh /usr/local/bin/playsong
+sudo install -Dm0777 -v share/logo.webp /usr/share/playsong/logo.webp
+```
+
 ## Usage
 ```bash
 playsong [infile] [subsfile] [outfile]

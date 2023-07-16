@@ -3,7 +3,7 @@ source .env
 cat << EOF
 # playsong.bash v$VERSION ⏫$(date +%Y%m%d)
 
-Play a song with visualization using only NVIDIA's driver, Bash, and ffmpeg
+Play a song with visualization using only Bash, and ffmpeg
 
 <a href="https://www.youtube.com/watch?v=DdPv2SEn-rg"><img src="https://i3.ytimg.com/vi/DdPv2SEn-rg/maxresdefault.jpg" width=480></a>
 

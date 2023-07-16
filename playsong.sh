@@ -17,17 +17,26 @@ FFSPECCOLOR="${FFSPECCOLOR:-intensity}"
 INPUT="${INPUT:-$1}"
 _COVERGIVEN="$COVER"
 COVER="${COVER:-"$(readlink -f "$(dirname -- "$1")/cover.jpg")"}"
-_cover_extensions=(jpg png webp jxl avif bmp)
-for ext in _cover_extensions; do
-	for possible_cover in cover folder; do
-        [ ! -f "$COVER" -a -z "$_COVERGIVEN" ] && (
-            COVER="$(readlink -f "$(dirname -- "$1")/$possible_cover.$ext")"
-        )
-        [ -f "$COVER" ] && (breakout=1 && break)
+_cover_extensions=(jpg jpeg png gif webp jxl avif bmp)
+breakout=""
+for ext in "${_cover_extensions[@]}"; do
+    for possible_cover in cover folder; do
+        if [[ ! -f "$COVER" && -z "$_COVERGIVEN" ]]; then
+            COVER="$(readlink -f "$(dirname -- "$1")")/$possible_cover.$ext"
+        fi
+        >&2 echo "Trying $COVER…"
+        if [[ -f "$COVER" ]]; then
+            breakout=1
+            break
+        fi
     done
-    [ -z "$breakout" ] && break
+    if [[ -n "$breakout" ]]; then
+        break
+    fi
 done
-[ ! -f "$COVER" ] && COVER=/usr/share/playsong/logo.webp
+if [[ ! -f "$COVER" ]]; then
+    COVER=/usr/share/playsong/logo.webp
+fi
 SUBS="$2"
 OUT="$3"
 OUTRATE="${OUTRATE:-60}"
@@ -35,7 +44,7 @@ OUTQP="${OUTQP:-23}"
 OUTHEIGHT="${OUTHEIGHT:-1080}"
 OUTWIDTH="${OUTWIDTH:-1920}"
 MPVARGS="${MPVARGS:--hwdec=auto}"
-which nvidia-smi && ( export __NV_PRIME_RENDER_OFFLOAD=1
+which nvidia-smi > /dev/null && ( export __NV_PRIME_RENDER_OFFLOAD=1
 export __GLX_VENDOR_LIBRARY_NAME=nvidia
 VCODECEXTRA=_nvenc)
 [[ -d /opt/intel/oneapi ]] && VCODECEXTRA=_vaapi

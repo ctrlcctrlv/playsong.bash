@@ -1,4 +1,4 @@
-# playsong.bash v2.0.1 ⏫20230716
+# playsong.bash v2.0.2 ⏫20230716
 
 Play a song with visualization using only Bash, and ffmpeg
 
